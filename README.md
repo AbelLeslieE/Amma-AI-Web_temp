@@ -1,5 +1,9 @@
 <img width="1280" height="640" alt="TinkerHub Useless Projects 3.0" src="https://github.com/user-attachments/assets/8920b256-2ba8-4988-b824-5351134eb4bd" />
 
+<p align="center">
+  <img src="docs/screenshots/amma-ai-cover.png" alt="Amma AI — She always knows better" width="100%" />
+</p>
+
 # Amma AI 🎯
 
 ## Basic Details
