@@ -94,13 +94,19 @@ export function useAmma() {
     if (audioRef.current)
       player.current = new AmmaAudioPlayer(audioRef.current);
     const w = window as SpeechWindow;
-    setCanRequestMic(Boolean(navigator.mediaDevices?.getUserMedia));
+    const mediaDevices = navigator.mediaDevices;
+    const hasMicrophone = Boolean(
+      mediaDevices && Reflect.has(mediaDevices, 'getUserMedia'),
+    );
+    const activeMicRequest = micRequest.current;
+    const activePlayer = player.current;
+    setCanRequestMic(hasMicrophone);
     setSecureContext(window.isSecureContext);
     setCanRecognize(
       Boolean(
         w.SpeechRecognition ||
         w.webkitSpeechRecognition ||
-        (navigator.mediaDevices && window.MediaRecorder),
+        (hasMicrophone && window.MediaRecorder),
       ),
     );
     void fetch('/api/ai/status', { cache: 'no-store' })
@@ -134,13 +140,15 @@ export function useAmma() {
     }
     setLoaded(true);
     return () => {
+      // Cleanup must invalidate the latest session, not the value from mount.
+      // oxlint-disable-next-line react-hooks/exhaustive-deps
       generation.current++;
       recognition.current?.cancel();
       if (recorder.current?.state === 'recording') recorder.current.stop();
       recorderStream.current?.getTracks().forEach((track) => track.stop());
       if (recorderTimer.current) clearTimeout(recorderTimer.current);
-      micRequest.current.cancel();
-      player.current?.stop();
+      activeMicRequest.cancel();
+      activePlayer?.stop();
     };
   }, []);
   useEffect(() => {
@@ -197,13 +205,14 @@ export function useAmma() {
   });
   const callLive = useRef(call);
   callLive.current = call;
+  const endCall = call.end;
   useEffect(() => {
     if (alarms.ringing) {
       stop();
-      call.end();
+      endCall();
       setMicHelpOpen(false);
     }
-  }, [alarms.ringing, stop, call.end]);
+  }, [alarms.ringing, stop, endCall]);
   const speak = useCallback(
     async (
       p: Phrase,
@@ -525,7 +534,11 @@ export function useAmma() {
       API = win.SpeechRecognition || win.webkitSpeechRecognition;
     const canRecordForAi =
       live.current.aiMode === 'live' &&
-      Boolean(window.MediaRecorder && navigator.mediaDevices?.getUserMedia);
+      Boolean(
+        window.MediaRecorder &&
+        navigator.mediaDevices &&
+        Reflect.has(navigator.mediaDevices, 'getUserMedia'),
+      );
     if (
       !window.isSecureContext ||
       (!API && !canRecordForAi) ||

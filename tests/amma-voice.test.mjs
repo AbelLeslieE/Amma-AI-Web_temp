@@ -1,12 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, statSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { respond } from '../lib/amma-engine.ts';
 import {
   detectIntent,
   isStudyClaim,
-  normalizeInput,
   recognitionTranscript,
 } from '../lib/amma-language.ts';
 import { findVoiceClip } from '../lib/amma-voice.ts';

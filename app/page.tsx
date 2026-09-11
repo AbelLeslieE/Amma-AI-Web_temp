@@ -142,6 +142,8 @@ export default function Home() {
     <SidebarProvider
       style={{ '--sidebar-width': '15.5rem' } as React.CSSProperties}
     >
+      {/* Speech is captioned in the current response panel. */}
+      {/* oxlint-disable-next-line jsx-a11y/media-has-caption */}
       <audio
         ref={a.audioRef}
         id="amma-voice-audio"
@@ -173,7 +175,7 @@ export default function Home() {
         </header>
         <main className="main-content" id="main-content">
           {a.notice && (
-            <div className="notice" role="status">
+            <output className="notice">
               <Info size={18} />
               <span>{a.notice}</span>
               <button
@@ -182,7 +184,7 @@ export default function Home() {
               >
                 <X size={17} />
               </button>
-            </div>
+            </output>
           )}
           {view !== 'talk' && a.phase !== 'idle' && (
             <div className="notice">

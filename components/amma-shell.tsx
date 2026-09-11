@@ -8,9 +8,7 @@ import {
   Settings2,
   ArrowUpRight,
   Heart,
-  Volume2,
   Plus,
-  Check,
 } from 'lucide-react';
 import {
   Sidebar,
@@ -195,7 +193,9 @@ export function Insights({
         <div>
           <h3>
             {a.history.length
-              ? `${a.history.length} things she remembers.`
+              ? `${a.history.length} ${
+                  a.history.length === 1 ? 'thing' : 'things'
+                } she remembers.`
               : 'She remembers.'}
           </h3>
           <p>

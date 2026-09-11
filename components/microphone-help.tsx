@@ -46,9 +46,7 @@ export function MicrophoneHelp({
           speech service may process the audio online. Amma AI does not save
           microphone recordings.
         </DialogDescription>
-        <p className="microphone-status" role="status">
-          {status}
-        </p>
+        <output className="microphone-status">{status}</output>
         <details
           className="device-help"
           open={a.micAccess === 'denied' || a.micAccess === 'error'}
