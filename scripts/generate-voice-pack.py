@@ -31,6 +31,6 @@ async def main():
   return line['key'],{'src':'/audio/'+path.name,'voice':line['voice'],'language':line['language'],'gender':line['gender'],'speaker':line['speaker'],'rate':line['rate'],'pitch':line['pitch'],'bytes':path.stat().st_size,'sha256':hashlib.sha256(path.read_bytes()).hexdigest()}
  results=await asyncio.gather(*(generate(line) for line in lines))
  manifest={'version':2,'provider':'Microsoft Edge neural speech','clips':dict(results)}
- tmp=ROOT/'lib/voice-manifest.tmp';tmp.write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8',newline='\n');os.replace(tmp,ROOT/'lib/voice-manifest.json')
+ tmp=ROOT/'lib/voice-manifest.tmp';tmp.write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n',encoding='utf-8',newline='\n');os.replace(tmp,ROOT/'lib/voice-manifest.json')
  print(f'Complete: {len(results)} verified voice assets.',flush=True)
 asyncio.run(main())

@@ -80,6 +80,6 @@ for (const personality of personalities)
     add(achanReply(personality, index + 1), 'Achan', index);
 writeFileSync(
   'scripts/voice-lines.json',
-  JSON.stringify([...entries.values()], null, 2),
+  JSON.stringify([...entries.values()], null, 2) + '\n',
 );
 console.log('Collected', entries.size, 'profile-specific voice clips.');

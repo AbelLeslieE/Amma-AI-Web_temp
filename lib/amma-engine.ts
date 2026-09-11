@@ -172,6 +172,70 @@ export const scenarios = [
     desc: 'There is food at home.',
     category: 'Food',
   },
+  {
+    id: 'room',
+    emoji: '🧹',
+    title: '“I cleaned my room.”',
+    input: 'I cleaned my room',
+    desc: 'The inspection begins under the bed.',
+    category: 'Chores',
+  },
+  {
+    id: 'clothes',
+    emoji: '👕',
+    title: '“Where is my black shirt?”',
+    input: 'Where is my black shirt?',
+    desc: 'Exactly where she said it was.',
+    category: 'Amma finder',
+  },
+  {
+    id: 'haircut',
+    emoji: '💇',
+    title: '“I got a new haircut.”',
+    input: 'I got a new haircut',
+    desc: 'The barber is now under review.',
+    category: 'Appearance',
+  },
+  {
+    id: 'gaming',
+    emoji: '🎮',
+    title: '“Just one more game.”',
+    input: 'Just one more game',
+    desc: 'You said that three games ago.',
+    category: 'Screen time',
+  },
+  {
+    id: 'gym',
+    emoji: '🏋️',
+    title: '“I joined a gym.”',
+    input: 'I joined a gym',
+    desc: 'The grocery bags need lifting.',
+    category: 'Fitness',
+  },
+  {
+    id: 'career',
+    emoji: '💼',
+    title: '“I have a job interview.”',
+    input: 'I have a job interview tomorrow',
+    desc: 'Eat first. Join ten minutes early.',
+    category: 'Career',
+  },
+  {
+    id: 'package',
+    emoji: '📦',
+    title: '“A package arrived.”',
+    input: 'A package arrived for me',
+    desc: 'The sale price requires evidence.',
+    category: 'Purchase detector',
+  },
+  {
+    id: 'pet',
+    emoji: '🐶',
+    title: '“Can we get a dog?”',
+    input: 'Can we get a dog?',
+    desc: 'Keep one plant alive first.',
+    category: 'Responsibility',
+  },
 ];
 export function respond(input: string, ctx: Context): Result {
   const s = normalizeInput(input);
@@ -370,6 +434,93 @@ export function respond(input: string, ctx: Context): Result {
     logic = 'Technical problem → excessive phone use → case closed.';
     detail =
       'Troubleshooting steps completed: 0. Confidence in diagnosis: 100% (for comedy only).';
+  } else if (intent === 'room') {
+    kind = 'Room inspection';
+    mood = 1;
+    reply = phrase(
+      'You cleaned your room? Wonderful. Now explain the entire ecosystem under the bed.',
+      'Room clean cheytho? Nallathu. Ippo kattilinte adiyilulla ecosystem onnu explain cheyyu.',
+      'മുറി വൃത്തിയാക്കിയോ? നല്ല കാര്യം. ഇനി കട്ടിലിന്റെ അടിയിലുള്ള പരിസ്ഥിതി ഒന്ന് വിശദീകരിക്ക്.',
+    );
+    logic = 'One clean surface detected. Hidden areas remain suspicious.';
+    detail =
+      'Inspection route: desk · cupboard · behind the curtain · under the bed.';
+  } else if (intent === 'clothes') {
+    kind = 'Amma finder';
+    mood = 2;
+    reply = phrase(
+      'Your black shirt is in the cupboard, exactly where I told you. If I come and find it, you owe me tea.',
+      'Ninte black shirt cupboard-il undu, njan paranja sthalathu thanne. Njan vannu kandupidichaal enikku chaaya venam.',
+      'നിന്റെ കറുത്ത ഷർട്ട് അലമാരയിൽ ഉണ്ട്, ഞാൻ പറഞ്ഞിടത്ത് തന്നെ. ഞാൻ വന്ന് കണ്ടുപിടിച്ചാൽ എനിക്ക് ചായ വേണം.',
+    );
+    logic = 'Missing object located by maternal certainty.';
+    detail =
+      'No cupboard was searched. Amma’s fictional finding accuracy remains 100%.';
+  } else if (intent === 'haircut') {
+    kind = 'Appearance review';
+    mood = 2;
+    reply = phrase(
+      'A new haircut? Turn around. Who told the barber to remove the good part?',
+      'Puthiya haircut aano? Onnu thirinju nilkku. Nalla bhaagam kalayaan barber-odu aaru paranju?',
+      'പുതിയ ഹെയർകട്ടാണോ? ഒന്ന് തിരിഞ്ഞു നിൽക്ക്. നല്ല ഭാഗം കളയാൻ ബാർബറോട് ആര് പറഞ്ഞു?',
+    );
+    logic = 'Hair changed without prior family committee approval.';
+    detail = 'Review status: shocked now · used to it by Sunday.';
+  } else if (intent === 'gaming') {
+    kind = 'Screen-time court';
+    mood = 3;
+    reply = phrase(
+      'One more game? You said that three games ago. Pause it. Amma does not have a pause button.',
+      'One more game aano? Moonnu game munpum ithu thanne paranju. Pause cheyyu. Ammakku pause button illa.',
+      'ഒരു ഗെയിം കൂടിയോ? മൂന്ന് ഗെയിം മുമ്പും ഇതുതന്നെ പറഞ്ഞു. പോസ് ചെയ്യ്. അമ്മയ്ക്ക് പോസ് ബട്ടൺ ഇല്ല.',
+    );
+    logic =
+      '“One more” translated to an unspecified number greater than three.';
+    detail = 'Final score: Game 3 · Chores 0 · Amma still undefeated.';
+  } else if (intent === 'gym') {
+    kind = 'Fitness plan';
+    mood = 1;
+    reply = phrase(
+      'You joined a gym? Excellent. Start by carrying all the grocery bags from the gate in one trip.',
+      'Gym-il chernno? Nallathu. Aadyam gate-il ninnu grocery bags ellam ore trip-il konduvaa.',
+      'ജിമ്മിൽ ചേർന്നോ? നല്ലത്. ആദ്യം ഗേറ്റിൽ നിന്ന് പലചരക്ക് ബാഗുകളെല്ലാം ഒറ്റ ട്രിപ്പിൽ കൊണ്ടുവാ.',
+    );
+    logic = 'Paid exercise replaced with a free household strength test.';
+    detail = 'Today’s workout: grocery carry · water-can lift · room clean-up.';
+  } else if (intent === 'career') {
+    kind = 'Career coaching';
+    mood = 0;
+    reply = phrase(
+      'A job interview? Good. Eat something, iron your shirt, join ten minutes early, and call me the moment it ends.',
+      'Job interview aano? Nallathu. Vallathum kazhikku, shirt iron cheyyu, pathu minute nerathe join cheyyu. Kazhinja udane vilikkanam.',
+      'ജോലി ഇന്റർവ്യൂ ആണോ? നല്ലത്. വല്ലതും കഴിക്ക്, ഷർട്ട് ഇസ്തിരിയിട്, പത്ത് മിനിറ്റ് നേരത്തെ ജോയിൻ ചെയ്യ്. കഴിഞ്ഞ ഉടനെ വിളിക്കണം.',
+    );
+    logic =
+      'Career event detected. Food, clothes, punctuality, and a callback assigned.';
+    detail =
+      'Amma’s checklist: breakfast · ironed shirt · early login · immediate update.';
+  } else if (intent === 'package') {
+    kind = 'Purchase detector';
+    mood = 3;
+    reply = phrase(
+      'A package for you? How much was it? Do not say “sale” before showing me the bill.',
+      'Ninakku package vanno? Ethra roopa aayi? Bill kaanikkathe sale aayirunnu ennu parayaruthu.',
+      'നിനക്ക് പാക്കേജ് വന്നോ? എത്ര രൂപയായി? ബിൽ കാണിക്കാതെ സെയിൽ ആയിരുന്നു എന്ന് പറയരുത്.',
+    );
+    logic = 'Doorbell + parcel = immediate financial investigation.';
+    detail =
+      'Evidence requested: invoice · discount · reason this was “necessary”.';
+  } else if (intent === 'pet') {
+    kind = 'Responsibility test';
+    mood = 2;
+    reply = phrase(
+      'A dog? First keep one plant alive for a month. Then we will discuss living creatures.',
+      'Naaya venam alle? Aadyam oru chedi oru maasam jeevanode nokku. Ennittu jeevikalude kaaryam samsaarikkaam.',
+      'നായ വേണമല്ലേ? ആദ്യം ഒരു ചെടി ഒരു മാസം ജീവനോടെ നോക്ക്. എന്നിട്ട് ജീവികളുടെ കാര്യം സംസാരിക്കാം.',
+    );
+    logic = 'Pet request converted into a thirty-day plant-care entrance exam.';
+    detail =
+      'Eligibility requirement: one living plant · thirty days · zero reminders.';
   }
 
   if (permissionStep === ctx.permissionStep && kind === 'Clarification') {

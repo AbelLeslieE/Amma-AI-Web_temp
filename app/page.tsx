@@ -215,7 +215,9 @@ export default function Home() {
             <>
               <div className="page-heading">
                 <div>
-                  <p className="eyebrow">TWELVE WAYS TO TEST HER PATIENCE.</p>
+                  <p className="eyebrow">
+                    {scenarios.length} WAYS TO TEST HER PATIENCE.
+                  </p>
                   <h1>
                     The demo playground. <span>Try your luck.</span>
                   </h1>
@@ -231,7 +233,8 @@ export default function Home() {
                   <p>
                     Try “I’m studying”, then “Suggest a movie” to see memory in
                     action. “Can I go out?” begins the three-question permission
-                    game.
+                    game. The new cards cover chores, missing clothes, haircuts,
+                    gaming, fitness, careers, packages, and pets.
                   </p>
                 </div>
               </div>

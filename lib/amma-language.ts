@@ -11,6 +11,14 @@ export type Intent =
   | 'sleep'
   | 'tech'
   | 'movie'
+  | 'room'
+  | 'clothes'
+  | 'haircut'
+  | 'gaming'
+  | 'gym'
+  | 'career'
+  | 'package'
+  | 'pet'
   | 'greeting'
   | 'thanks'
   | 'unknown';
@@ -82,6 +90,48 @@ export function detectIntent(input: string): Intent {
     return 'study';
   if (/sleep|2 am|late night|urang|urakk|ഉറങ്ങ|ഉറക്ക|രാത്രി.*രണ്ട്/.test(s))
     return 'sleep';
+  if (
+    /cleaned.*room|room.*clean|tidied.*room|muri.*vrithi|മുറി.*വൃത്തിയാക്കി|റൂം.*വൃത്തിയാക്കി/.test(
+      s,
+    )
+  )
+    return 'room';
+  if (
+    /\b(shirt|dress|clothes)\b|shirt.*evide|thuni.*evide|ഷർട്ട്|ഷര്‍ട്ട്|വസ്ത്രം|തുണി.*എവിടെ/.test(
+      s,
+    )
+  )
+    return 'clothes';
+  if (
+    /haircut|hair cut|cut my hair|mudi.*murich|മുടി.*മുറി|ഹെയർകട്ട്|ഹെയര്‍കട്ട്/.test(s)
+  )
+    return 'haircut';
+  if (
+    /\b(game|gaming|pubg|minecraft|playstation|xbox)\b|game.*kalikk|ഗെയിം|പബ്ജി|മൈൻക്രാഫ്റ്റ്/.test(
+      s,
+    )
+  )
+    return 'gaming';
+  if (/\b(gym|workout|exercise)\b|vyayam|ജിം|ജിമ്മ|വർക്ഔട്ട്|വ്യായാമ/.test(s))
+    return 'gym';
+  if (
+    /job offer|job interview|\binterview\b|\bresume\b|ജോലി|ഇന്റർവ്യൂ|ഇൻ്റർവ്യൂ|റെസ്യൂമെ/.test(
+      s,
+    )
+  )
+    return 'career';
+  if (
+    /\b(package|parcel)\b|delivery.*arriv|amazon.*parcel|പാഴ്സൽ|പാഴ്സല്‍|പാക്കേജ്|ഡെലിവറി.*വന്നു/.test(
+      s,
+    )
+  )
+    return 'package';
+  if (
+    /\b(dog|cat|puppy|kitten|pet)\b|naaya|patti|poocha|പട്ടി|നായ|പൂച്ച|വളർത്തു.*മൃഗ/.test(
+      s,
+    )
+  )
+    return 'pet';
   if (
     /wi\s?fi|laptop|phone|computer|internet|വൈഫൈ|വൈ ഫൈ|ഇന്റർനെറ്റ്|ഇൻ്റർനെറ്റ്|നെറ്റ്|ലാപ്ടോപ്പ്|ലാപ്‌ടോപ്പ്|ഫോൺ|ഫോണ്|കമ്പ്യൂട്ടർ/.test(
       s,
