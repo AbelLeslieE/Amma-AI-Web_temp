@@ -39,6 +39,7 @@ test('AI prompt requires equivalent Malayalam, Manglish and English answers', ()
   assert.match(prompt, /reply\.ml must be idiomatic Malayalam/);
   assert.match(prompt, /Romanized Malayalam/);
   assert.match(prompt, /Coimbatore Tamil code-switching/);
+  assert.match(prompt, /Infer the user's meaning directly/);
   assert.match(
     speechInstructions('Thrissur Amma', 'Malayalam'),
     /Thrissur-flavoured Malayalam/,

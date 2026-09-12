@@ -11,7 +11,7 @@
     "build:render": "node scripts/build-render.mjs",
     "start": "wrangler dev --config dist/server/wrangler.json",
     "start:render": "node dist/standalone/server.js",
-    "test": "node --test tests/amma-engine.test.mjs tests/amma-voice.test.mjs tests/amma-mobile.test.mjs tests/achan-call.test.mjs tests/amma-alarm.test.mjs tests/amma-ai.test.mjs",
+    "test": "node --test tests/amma-engine.test.mjs tests/amma-voice.test.mjs tests/amma-mobile.test.mjs tests/achan-call.test.mjs tests/amma-alarm.test.mjs tests/amma-ai.test.mjs tests/amma-corrections.test.mjs",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint",
     "format": "oxfmt"

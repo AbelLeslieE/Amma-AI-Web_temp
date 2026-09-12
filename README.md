@@ -17,7 +17,7 @@
 
 ### Project Description
 
-Amma AI is a voice-first Malayalam comedy app that behaves like an extremely opinionated virtual Amma. It understands Malayalam, Manglish, English, and mixed speech; changes personality by region; remembers suspicious statements; sets alarms one hour earlier than requested; and calls in an increasingly angry Achan when the permission interview goes badly.
+Amma AI is a voice-first Malayalam comedy app that behaves like an extremely opinionated virtual Amma. It understands Malayalam, Manglish, English, and mixed speech; lets people review misunderstood words; remembers confirmed corrections locally to improve later transcription; changes personality by region; sets alarms one hour earlier than requested; and calls in an increasingly angry Achan when the permission interview goes badly.
 
 ### The Problem (that doesn't exist)
 
@@ -36,7 +36,7 @@ For Software:
 - Languages: TypeScript, JavaScript, HTML, CSS, Malayalam, and Manglish
 - Frameworks: React 19 and Vinext
 - Libraries: Base UI, Shadcn components, Lucide React, and date-fns
-- AI: OpenAI Responses, speech-to-text, and text-to-speech APIs with an offline scripted fallback
+- AI: OpenAI Responses, multilingual speech-to-text with locally learned correction hints, and text-to-speech APIs with an offline scripted fallback
 - Tools: Node.js 24, GitHub, Render, edge-tts, TypeScript, Oxlint, and Oxfmt
 
 For Hardware:

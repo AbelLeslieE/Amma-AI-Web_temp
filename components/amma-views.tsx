@@ -330,6 +330,23 @@ export function Settings({ a }: { a: Amma }) {
             <Mic size={18} /> Microphone setup
           </button>
         </div>
+        <div className="setting-row">
+          <div>
+            <strong>Learned speech corrections</strong>
+            <p>
+              {a.speechCorrectionCount
+                ? `${a.speechCorrectionCount} confirmed correction${a.speechCorrectionCount === 1 ? '' : 's'} saved only on this device. They guide later Malayalam and Manglish transcription.`
+                : 'When you fix a microphone transcript, Amma can use that correction as a hint next time.'}
+            </p>
+          </div>
+          <button
+            className="outline-button"
+            disabled={a.phase !== 'idle' || !a.speechCorrectionCount}
+            onClick={a.clearSpeechCorrections}
+          >
+            <RotateCcw size={16} /> Clear corrections
+          </button>
+        </div>
         {[
           {
             key: 'voice',

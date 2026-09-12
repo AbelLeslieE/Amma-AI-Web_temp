@@ -243,7 +243,18 @@ export function Talk({
                       enterKeyHint="done"
                       lang={a.language === 'English' ? 'en' : 'ml'}
                     />
-                    <p>Edit any missed words, then send it to Amma.</p>
+                    <p
+                      className={
+                        a.speechWasCorrected
+                          ? 'correction-hint learned'
+                          : 'correction-hint'
+                      }
+                      aria-live="polite"
+                    >
+                      {a.speechWasCorrected
+                        ? 'Correction ready. Amma will remember it on this device and use it as a hint next time.'
+                        : 'Edit any missed words, then send it to Amma.'}
+                    </p>
                     <div className="speech-review-actions">
                       <button className="outline-button" onClick={a.listen}>
                         <Mic size={15} /> Try again
@@ -251,9 +262,12 @@ export function Talk({
                       <button
                         className="ask-button"
                         disabled={!a.speechDraft.trim()}
-                        onClick={() => void a.send(a.speechDraft)}
+                        onClick={() => void a.sendSpeechDraft()}
                       >
-                        <ArrowUp size={16} /> Send to Amma
+                        <ArrowUp size={16} />
+                        {a.speechWasCorrected
+                          ? 'Save correction & send'
+                          : 'Send to Amma'}
                       </button>
                     </div>
                   </>

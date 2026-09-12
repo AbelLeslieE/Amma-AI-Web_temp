@@ -18,6 +18,12 @@ import { AmmaAudioPlayer } from './amma-audio';
 import { findVoiceClip, voiceName } from './amma-voice';
 import { parseAiResult, type AiMode } from './amma-ai';
 import {
+  isSpeechCorrection,
+  parseSpeechCorrections,
+  rememberSpeechCorrection,
+  type SpeechCorrection,
+} from './amma-corrections';
+import {
   AmmaSpeechSession,
   MicrophonePermissionRequest,
   microphoneError,
@@ -31,6 +37,7 @@ type SpeechWindow = Window & {
   SpeechRecognition?: new () => Recognition;
   webkitSpeechRecognition?: new () => Recognition;
 };
+const SPEECH_CORRECTIONS_KEY = 'amma-speech-corrections';
 export function useAmma() {
   const [history, setHistory] = useState<Turn[]>([]);
   const [language, setLanguage] = useState<Language>('Malayalam'),
@@ -50,12 +57,16 @@ export function useAmma() {
   const [micAccess, setMicAccess] = useState<MicrophoneAccess>('unknown');
   const [micHelpOpen, setMicHelpOpen] = useState(false);
   const [aiMode, setAiMode] = useState<AiMode>('fallback');
+  const [speechCorrections, setSpeechCorrections] = useState<
+    SpeechCorrection[]
+  >([]);
   const [speechEngine, setSpeechEngine] = useState<'ai' | 'browser'>('browser');
   const [canRequestMic, setCanRequestMic] = useState(false);
   const [secureContext, setSecureContext] = useState(true);
   const micRequest = useRef(new MicrophonePermissionRequest());
   const [pendingInput, setPendingInput] = useState(''),
     [speechDraft, setSpeechDraft] = useState(''),
+    [heardTranscript, setHeardTranscript] = useState(''),
     [interimText, setInterimText] = useState(''),
     [reviewSpeech, setReviewSpeech] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null),
@@ -78,6 +89,7 @@ export function useAmma() {
     permissionStep,
     phase,
     aiMode,
+    speechCorrections,
   });
   live.current = {
     history,
@@ -89,6 +101,7 @@ export function useAmma() {
     permissionStep,
     phase,
     aiMode,
+    speechCorrections,
   };
   useEffect(() => {
     if (audioRef.current)
@@ -138,6 +151,15 @@ export function useAmma() {
     } catch {
       /* Storage is optional. */
     }
+    try {
+      setSpeechCorrections(
+        parseSpeechCorrections(
+          JSON.parse(localStorage.getItem(SPEECH_CORRECTIONS_KEY) || '[]'),
+        ),
+      );
+    } catch {
+      /* Correction memory is optional and remains local to this browser. */
+    }
     setLoaded(true);
     return () => {
       // Cleanup must invalidate the latest session, not the value from mount.
@@ -170,6 +192,17 @@ export function useAmma() {
         /* Preferences remain in memory. */
       }
   }, [loaded, language, personality, voice, captions, nagging, speed]);
+  useEffect(() => {
+    if (!loaded) return;
+    try {
+      localStorage.setItem(
+        SPEECH_CORRECTIONS_KEY,
+        JSON.stringify(speechCorrections),
+      );
+    } catch {
+      /* Correction memory remains in this session when storage is unavailable. */
+    }
+  }, [loaded, speechCorrections]);
   const stop = useCallback(() => {
     generation.current++;
     const r = recognition.current;
@@ -312,6 +345,7 @@ export function useAmma() {
       setPendingInput(clean);
       setReviewSpeech(false);
       setSpeechDraft('');
+      setHeardTranscript('');
       setInterimText('');
       setPhase('thinking');
       nagged.current = false;
@@ -473,6 +507,12 @@ export function useAmma() {
             blob,
             media.mimeType.includes('mp4') ? 'question.m4a' : 'question.webm',
           );
+          form.set('language', live.current.language);
+          form.set('personality', live.current.personality);
+          form.set(
+            'corrections',
+            JSON.stringify(live.current.speechCorrections.slice(0, 12)),
+          );
           const response = await fetch('/api/ai/transcribe', {
             method: 'POST',
             body: form,
@@ -488,6 +528,7 @@ export function useAmma() {
                 : 'No speech was detected.',
             );
           setSpeechDraft(body.text);
+          setHeardTranscript(body.text);
           setReviewSpeech(true);
           setNotice('Review what Amma heard, then send it.');
         } catch (error) {
@@ -551,6 +592,7 @@ export function useAmma() {
     setNotice('');
     player.current?.stop();
     setSpeechDraft('');
+    setHeardTranscript('');
     setInterimText('');
     setReviewSpeech(false);
     const token = ++generation.current;
@@ -583,6 +625,7 @@ export function useAmma() {
           setInterimText('');
           if (text) {
             setSpeechDraft(text);
+            setHeardTranscript(text);
             setReviewSpeech(true);
           }
           if (error) {
@@ -639,6 +682,7 @@ export function useAmma() {
         setMicHelpOpen(false);
         if (captured) {
           setSpeechDraft(captured);
+          setHeardTranscript(captured);
           setReviewSpeech(true);
         }
         setNotice(
@@ -659,8 +703,28 @@ export function useAmma() {
   const discardSpeech = () => {
     setReviewSpeech(false);
     setSpeechDraft('');
+    setHeardTranscript('');
     setInterimText('');
   };
+  const sendSpeechDraft = useCallback(async () => {
+    const corrected = speechDraft.trim();
+    if (!corrected) return { error: 'Please review the transcript first.' };
+    if (isSpeechCorrection(heardTranscript, corrected)) {
+      const remembered = rememberSpeechCorrection(
+        live.current.speechCorrections,
+        heardTranscript,
+        corrected,
+      );
+      live.current.speechCorrections = remembered;
+      setSpeechCorrections(remembered);
+    }
+    return send(corrected);
+  }, [heardTranscript, send, speechDraft]);
+  const clearSpeechCorrections = useCallback(() => {
+    live.current.speechCorrections = [];
+    setSpeechCorrections([]);
+    setNotice('Saved speech corrections cleared from this device.');
+  }, []);
   const reset = useCallback(() => {
     callLive.current.end();
     stop();
@@ -672,6 +736,7 @@ export function useAmma() {
     setAutoTranscript(false);
     setReviewSpeech(false);
     setSpeechDraft('');
+    setHeardTranscript('');
     nagged.current = false;
   }, [stop]);
   useEffect(() => {
@@ -782,6 +847,11 @@ export function useAmma() {
     speechEngine,
     speechDraft,
     setSpeechDraft,
+    heardTranscript,
+    speechWasCorrected: isSpeechCorrection(heardTranscript, speechDraft),
+    speechCorrectionCount: speechCorrections.length,
+    sendSpeechDraft,
+    clearSpeechCorrections,
     interimText,
     reviewSpeech,
     discardSpeech,
