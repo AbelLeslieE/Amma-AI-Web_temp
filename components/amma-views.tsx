@@ -27,6 +27,10 @@ import {
   EmptyMedia,
 } from '@/components/ui/empty';
 import { translate, type Language, type Personality } from '@/lib/amma-engine';
+import {
+  createPermissionCertificatePdf,
+  permissionCertificateFilename,
+} from '@/lib/permission-certificate';
 import type { Amma, View } from './amma-shell';
 export function Memory({
   a,
@@ -134,13 +138,16 @@ export function Permission({
   ];
   const done = a.permissionStep === 4;
   const download = () => {
-    const report = `AMMA AI — UNOFFICIAL PERMISSION CERTIFICATE\n\nApplicant: Kuttan\nDecision: DENIED\nReason: Amma said so.\nAmma confidence: 100%\nAppeals: Ask again after doing the dishes.\n\nThis is a comedy demo certificate, not an official document.\nIssued: ${new Date().toLocaleString('en-IN')}\n`;
+    const certificate = createPermissionCertificatePdf({
+      applicant: 'Kuttan',
+      personality: a.personality,
+    });
     const link = document.createElement('a');
     const url = URL.createObjectURL(
-      new Blob([report], { type: 'text/plain;charset=utf-8' }),
+      new Blob([certificate], { type: 'application/pdf' }),
     );
     link.href = url;
-    link.download = 'amma-permission-certificate.txt';
+    link.download = permissionCertificateFilename();
     document.body.appendChild(link);
     link.click();
     link.remove();
@@ -209,7 +216,7 @@ export function Permission({
               </h3>
               <p>“Veettil irunnaal mathi.” Stay home.</p>
               <button className="outline-button" onClick={download}>
-                <Download size={16} /> Get your rejection certificate
+                <Download size={16} /> Download official PDF
               </button>
               <button
                 className="text-link"

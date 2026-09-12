@@ -25,7 +25,7 @@ People are dangerously close to making their own decisions, setting alarms for t
 
 ### The Solution (that nobody asked for)
 
-We made an AI Amma who supplies unsolicited advice, affectionate interrogation, Malayalam comedy, regional personalities, early alarms, and a simulated Achan escalation system. It is wonderfully unnecessary and fully usable on phones.
+We made an AI Amma who supplies unsolicited advice, affectionate interrogation, Malayalam comedy, regional personalities, early alarms, a simulated Achan escalation system, and a polished PDF certifying that your permission was officially rejected. It is wonderfully unnecessary and fully usable on phones.
 
 ## Technical Details
 
